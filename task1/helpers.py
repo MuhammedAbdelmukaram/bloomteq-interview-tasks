@@ -1,8 +1,8 @@
 from collections import Counter
-from typing import List, Dict, Tuple, Optional
+from typing import List, Dict, Tuple, Optional, Set
 
 
-def extract_used_ids_and_values(existing: List[Dict[str, int]]) -> Tuple[set, List[int]]:
+def extract_used_ids_and_values(existing: List[Dict[str, int]]) -> Tuple[Set[int], List[int]]:
     """
     Extracts unique 'id' values and collects all valid 'value' entries from a list of dictionaries.
 
