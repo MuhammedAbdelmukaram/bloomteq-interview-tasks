@@ -65,6 +65,26 @@ class TestLookupFunction(unittest.TestCase):
         obj = {"a b": {"c d": "value"}}
         self.assertEqual(lookup(obj, "a b.c d"), "value")
 
+    def test_path_is_not_string(self):
+        self.assertIsNone(lookup({"a": {"b": 1}}, None))
+        self.assertIsNone(lookup({"a": {"b": 1}}, 123))
+
+    def test_integer_dict_keys(self):
+        self.assertEqual(lookup({1: {2: "ok"}}, "1.2"), "ok")
+
+    def test_empty_string_key(self):
+        self.assertEqual(lookup({"": {"": "empty"}}, "."), "empty")
+
+    def test_valid_prefix_then_invalid(self):
+        self.assertIsNone(lookup({"a": {"b": 1}}, "a.b.c"))
+
+    def test_path_with_trailing_dot(self):
+        self.assertIsNone(lookup({"a": {"b": 1}}, "a.b."))
+
+    def test_path_with_leading_trailing_spaces(self):
+        obj = {" a ": {" b ": "value"}}
+        self.assertEqual(lookup(obj, " a . b "), "value")
+
 
 if __name__ == "__main__":
     unittest.main()

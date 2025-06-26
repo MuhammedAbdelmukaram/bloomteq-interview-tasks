@@ -2,6 +2,10 @@ from typing import Any, Dict
 
 
 def lookup(obj: Dict, path: str) -> Any:
+
+    if not isinstance(path, str):
+        return None
+
     try:
         for key in path.split("."):
             if not isinstance(obj, Dict):
