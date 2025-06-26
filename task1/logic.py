@@ -1,49 +1,17 @@
 from collections import Counter
-from typing import List, Dict
+from typing import List, Dict, Optional
+from .helpers import extract_used_ids_and_values, find_valid_candidate_value
 
 
-def generate_new_entry(existing: List[Dict[str, int]]) -> Dict[str, int]:
+def generate_new_entry(existing: List[Dict[str, int]]) -> Optional[Dict[str, int]]:
     if not existing:
         return {"id": 1, "value": 1}
 
-    used_ids = set()
-    used_values = []
-
-    for entry in existing:
-        if not isinstance(entry, Dict):
-            continue
-        if "id" not in entry or not isinstance(entry["id"], int):
-            continue
-        if "value" not in entry or not isinstance(entry["value"], int):
-            continue
-        if entry["id"] in used_ids:
-            continue
-
-        used_ids.add(entry["id"])
-        used_values.append(entry["value"])
-
+    used_ids, used_values = extract_used_ids_and_values(existing)
     value_counter = Counter(used_values)
+    candidate_value = find_valid_candidate_value(value_counter)
 
-    min_value = 1
-
-    for key, value in sorted(value_counter.items()):
-        if value >= 2:
-            min_value = key
-            break
-
-    max_value = max(used_values)
-
-    if max_value < 0:
-        max_value = 1
-    else:
-        max_value += 1
-
-    for candidate in range(1, max_value + 1):
-        if candidate in value_counter:
-            continue
-
-        for value, count in sorted(value_counter.items()):
-            if value < candidate and count >= 2:
-                return {"id": max(used_ids, default=0) + 1, "value": candidate}
+    if candidate_value is not None:
+        return {"id": max(used_ids, default=0) + 1, "value": candidate_value}
 
     return None
