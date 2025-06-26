@@ -52,8 +52,9 @@ def find_valid_candidate_value(value_counter: Counter) -> Optional[int]:
     """
     min_value = 1
 
+    sorted_items = sorted(value_counter.items())
     # Determine starting point based on smallest repeated positive value
-    for key, value in sorted(value_counter.items()):
+    for key, value in sorted_items:
         if value >= 2 and key < 1:
             break
         elif value >= 2 and key > 0:
@@ -74,7 +75,7 @@ def find_valid_candidate_value(value_counter: Counter) -> Optional[int]:
             continue
 
         # Check if a smaller value exists that is repeated
-        for value, count in sorted(value_counter.items()):
+        for value, count in sorted_items:
             if value < candidate and count >= 2:
                 return candidate
 
