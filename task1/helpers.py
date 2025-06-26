@@ -26,7 +26,9 @@ def find_valid_candidate_value(value_counter: Counter) -> Optional[int]:
     min_value = 1
 
     for key, value in sorted(value_counter.items()):
-        if value >= 2:
+        if value >= 2 and key < 1:
+            break
+        elif value >= 2 and key > 0:
             min_value = key
             break
 
@@ -37,7 +39,7 @@ def find_valid_candidate_value(value_counter: Counter) -> Optional[int]:
     else:
         max_value += 1
 
-    for candidate in range(1, max_value + 1):
+    for candidate in range(min_value, max_value + 1):
         if candidate in value_counter:
             continue
 
