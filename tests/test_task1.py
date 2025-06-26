@@ -1,4 +1,5 @@
 import unittest
+
 from task1.logic import generate_new_entry
 
 
@@ -188,7 +189,7 @@ class TestGenerateNewEntry(unittest.TestCase):
         # because duplicate starts from value 2
         self.assertEqual(result, {"id": 5001, "value": 3})
 
-    # Similar to a version of smaller data set with incorrect values from above
+    # Similar to a version of smaller data set with incorrect values from above.
     # At the very end I just add two more correctvalues just so I can see will
     # any of it affect the algorithm
     def test_many_invalid_entries_with_some_valid(self):
@@ -204,7 +205,7 @@ class TestGenerateNewEntry(unittest.TestCase):
         result = generate_new_entry(data)
         self.assertEqual(result, {"id": 1003, "value": 5})  # 1 is missing, 4 is repeated
 
-    # Testing does having every number duplicated impact the final solution
+    # Testing does having every number duplicated impact the final solution and complexity
     def test_candidate_above_multiple_repeats(self):
         data = [
             {"id": 1, "value": 1},
@@ -218,9 +219,7 @@ class TestGenerateNewEntry(unittest.TestCase):
         result = generate_new_entry(data)
         self.assertEqual(result, {"id": 7, "value": 4})
 
-    # Almost basic case test, but I did it as I wasnt sure about something
-    # in the algorithm, just so I could use debuger and check it
-    # probably unnecessary
+    # Almost basic case test, but I did it as a part of debugging effort
     def test_multiple_gaps_only_one_valid(self):
         data = [
             {"id": 1, "value": 1},
@@ -234,10 +233,9 @@ class TestGenerateNewEntry(unittest.TestCase):
         result = generate_new_entry(data)
         self.assertEqual(result, {"id": 6, "value": 2})
 
-    # Testing negative repeated values
-    # Task says to add smallest positive integer not present anywhere
-    # But it never says that negative duplicate or 0 duplicates
-    # are not "enablers"
+    # Testing negative repeated values,
+    # Task says to add smallest positive integer not present anywhere,
+    # But it never says that negative duplicate or 0 duplicates are not "enablers"
     def test_negative_repeated_values(self):
         data = [
             {"id": 1, "value": -1},
@@ -285,8 +283,7 @@ class TestGenerateNewEntry(unittest.TestCase):
         result = generate_new_entry(data)
         self.assertEqual(result, {"id": 7, "value": 2})
 
-    # True border case for the algorithm, to check will it give -4, 0, or
-    # actually correct value of 1
+    # True border case for the algorithm, to check will it give -4, 0, or actually correct value of 1
     def test_all_negative_values_empty_positive_candidate(self):
         data = [
             {"id": 1, "value": -5},
@@ -297,8 +294,7 @@ class TestGenerateNewEntry(unittest.TestCase):
         result = generate_new_entry(data)
         self.assertEqual(result, {"id": 4, "value": 1})
 
-    # Similar to tests above, but instead of dupliacte negative we have
-    # duplicate 0
+    # Similar to tests above, but instead of dupliacte negative we have duplicate 0
     def test_zero_and_negative_values_ignored(self):
         data = [
             {"id": 1, "value": 0},
