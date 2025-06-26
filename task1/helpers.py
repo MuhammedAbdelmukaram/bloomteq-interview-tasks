@@ -40,43 +40,59 @@ def extract_used_ids_and_values(existing: List[Dict[str, int]]) -> Tuple[Set[int
     return used_ids, used_values
 
 
+
 def find_valid_candidate_value(value_counter: Counter) -> Optional[int]:
     """
-    Finds the smallest unused positive integer candidate that can be used as a 'value'.
+    Finds the smallest unused positive integer candidate for 'value'.
 
-    A candidate is valid if it is not in the value_counter,
-    and if there exists at least one smaller number that appears at least twice.
+    A candidate is valid if:
+      1. It is not already in value_counter.keys().
+      2. There is at least one repeated entry (count >= 2) anywhere (positive, zero or negative),
+         and either:
+         • A positive number repeats — start at the smallest positive repeated.
+         • Otherwise (only zero/negative repeat) — start at 1.
 
     Returns:
-        The valid candidate value if found, otherwise None.
+        The valid candidate if found, otherwise None.
+    Time: O(n)    Space: O(n)
     """
-    min_value = 1
+    # Build a set of all used values for O(1) lookups
+    used_values = set(value_counter.keys())
 
-    sorted_items = sorted(value_counter.items())
-    # Determine starting point based on smallest repeated positive value
-    for key, value in sorted_items:
-        if value >= 2 and key < 1:
+    # Collect all values that appear >= 2 times
+    repeats = []
+    for value, count in value_counter.items():
+        if count >= 2:
+            repeats.append(value)
+
+    # If no repeats at all, no valid candidate
+    if not repeats:
+        return None
+
+    # Determine starting point: smallest positive repeated, or 1
+    start = 1
+    for value in repeats:
+        if value < 1:
             break
-        elif value >= 2 and key > 0:
-            min_value = key
-            break
+        if value > 0:
+            if start == 1 or value < start:
+                start = value
 
-    # Determine upper bound for candidate range
-    max_value = max(value_counter.keys(), default=0)
-
-    if max_value < 0:
-        max_value = 1
+    # 3) Determine the upper bound to scan (max + 1, or 1 if all negative)
+    if used_values:
+        max_val = max(used_values)
     else:
-        max_value += 1
+        max_val = 0
 
-    # Look for smallest unused candidate starting from min_value
-    for candidate in range(min_value, max_value + 1):
-        if candidate in value_counter:
+    if max_val < 0:
+        upper = 1
+    else:
+        upper = max_val + 1
+
+    # 4) Scan for the first missing candidate in [start..upper]
+    for candidate in range(start, upper + 1):
+        if candidate in used_values:
             continue
-
-        # Check if a smaller value exists that is repeated
-        for value, count in sorted_items:
-            if value < candidate and count >= 2:
-                return candidate
+        return candidate
 
     return None
