@@ -1,4 +1,8 @@
 import unittest
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from task1.logic import generate_new_entry
 
